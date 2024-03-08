@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useGlobalContext } from "../store/user_context";
 import {
   Button,
@@ -7,6 +7,8 @@ import {
   FormControl,
   Typography,
   Container,
+  Select,
+  MenuItem,
   styled,
 } from "@mui/material";
 import Box from "@mui/material/Box";
@@ -15,8 +17,14 @@ import theme from "../theme";
 import beerPicWithWoman from "../assets/img/woman-pulling-beer-out-of-box-of-beers.jpg";
 
 const BreweriesByCityState = () => {
-  const { breweries, formatPhoneNumber, findByCityState, areBreweries } =
-    useGlobalContext();
+  const {
+    breweries,
+    formatPhoneNumber,
+    findByCityState,
+    areBreweries,
+    setAreBreweries,
+    states,
+  } = useGlobalContext();
   const [isVisible, setIsVisible] = useState(true);
 
   const handleSubmit = (event) => {
@@ -41,6 +49,10 @@ const BreweriesByCityState = () => {
       cursor: "pointer",
     },
   }));
+
+  useEffect(() => {
+    setAreBreweries(false);
+  }, []);
 
   return (
     <Container maxWidth="xl">
@@ -90,9 +102,24 @@ const BreweriesByCityState = () => {
               <Input id="city" name="city" type="text" />
             </FormControl>
             <FormControl>
-              <InputLabel htmlFor="state">State: </InputLabel>
-              <Input id="state" name="state" type="text" />
+              <InputLabel id="state-label" htmlFor="state">
+                State:{" "}
+              </InputLabel>
+              <Select
+                labelId="state-label"
+                id="state"
+                name="state"
+                label="State"
+                defaultValue=""
+              >
+                {states.map((state) => (
+                  <MenuItem key={state} value={state}>
+                    {state}
+                  </MenuItem>
+                ))}
+              </Select>
             </FormControl>
+
             <Button type="submit" variant="contained" color="primary">
               Search Breweries
             </Button>

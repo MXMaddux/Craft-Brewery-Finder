@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import { Typography, styled, Container } from "@mui/material";
 import Box from "@mui/material/Box";
 import theme from "../theme"; // Assuming you're using react-router for navigation
@@ -11,6 +11,7 @@ const ByLocation = () => {
     findBreweriesByCurrentCity,
     breweries,
     areBreweries,
+    setAreBreweries,
     formatPhoneNumber,
   } = useGlobalContext();
 
@@ -40,6 +41,10 @@ const ByLocation = () => {
       cursor: "pointer",
     },
   }));
+
+  useEffect(() => {
+    setAreBreweries(false);
+  }, []);
 
   return (
     <Container maxWidth="xl">
