@@ -41,10 +41,12 @@ function ResponsiveAppBar() {
   return (
     <AppBar position="static">
       <Container maxWidth="xl">
-        <Toolbar disableGutters>
-          <Box sx={{ display: "flex", flexGrow: 1, alignItems: "center" }}>
+        <Toolbar disableGutters sx={{ justifyContent: "space-between" }}>
+          {" "}
+          {/* Ensure elements are spaced out */}
+          <Box sx={{ display: "flex", alignItems: "center" }}>
             <SportsBarIcon
-              sx={{ display: { xs: "none", md: "flex" }, mr: 1 }}
+              sx={{ display: { xs: "flex", md: "flex" }, mr: 1 }}
             />
             <Typography
               variant="h6"
@@ -59,14 +61,12 @@ function ResponsiveAppBar() {
                 letterSpacing: ".3rem",
                 color: "inherit",
                 textDecoration: "none",
+                fontSize: { xs: "0.875rem", sm: "1rem" }, // Adjust font size on small screens
               }}
             >
               CRAFT.BREWERY.FINDER
             </Typography>
           </Box>
-
-          {/* For smaller screens */}
-
           <IconButton
             size="large"
             aria-label="open drawer"
@@ -74,25 +74,10 @@ function ResponsiveAppBar() {
             aria-haspopup="true"
             onClick={handleOpenNavMenu}
             color="inherit"
-            sx={{ display: { xs: "flex", md: "none" } }}
+            sx={{ ml: "auto" }} // Push the icon button to the right
           >
             <MenuIcon />
           </IconButton>
-
-          {/* Menu and navigation buttons for larger screens */}
-          <Box
-            sx={{ display: { xs: "none", md: "flex" }, alignItems: "center" }}
-          >
-            {pages.map((page) => (
-              <Button
-                key={page.name}
-                onClick={() => handleNavigate(page.path)}
-                sx={{ my: 2, color: "white", display: "block" }}
-              >
-                {page.name}
-              </Button>
-            ))}
-          </Box>
         </Toolbar>
       </Container>
     </AppBar>
