@@ -1,13 +1,39 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import React from "react";
+import ReactDOM from "react-dom/client";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import "./index.css";
+import App from "./App";
+import reportWebVitals from "./reportWebVitals";
+import { UserProvider } from "./store/user_context";
+import { ThemeProvider } from "@mui/material/styles";
+import BreweriesByCityStatePage from "./pages/BreweriesByCityStatePage";
+import ByLocationPage from "./pages/ByLocationPage";
+import theme from "./theme";
+import BeerStylesPage from "./pages/BeerStylesPage";
+import Home from "./pages/Home";
+import Navbar from "./components/Navbar";
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <App />
+    <ThemeProvider theme={theme}>
+      <UserProvider>
+        <Router>
+          <Navbar />
+          <App />
+          <Routes>
+            <Route exact path="/" element={<Home />} />
+            <Route
+              exact
+              path="/bycitystate"
+              element={<BreweriesByCityStatePage />}
+            />
+            <Route exact path="/bylocation" element={<ByLocationPage />} />
+            <Route exact path="/beerstyles" element={<BeerStylesPage />} />
+          </Routes>
+        </Router>
+      </UserProvider>
+    </ThemeProvider>
   </React.StrictMode>
 );
 
