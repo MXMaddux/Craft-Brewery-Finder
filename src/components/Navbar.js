@@ -7,9 +7,7 @@ import Typography from "@mui/material/Typography";
 import Menu from "@mui/material/Menu";
 import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
-import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
-import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import SportsBarIcon from "@mui/icons-material/SportsBar";
 import { useNavigate } from "react-router-dom";
@@ -41,31 +39,37 @@ function ResponsiveAppBar() {
   return (
     <AppBar position="static">
       <Container maxWidth="xl">
-        <Toolbar disableGutters sx={{ justifyContent: "space-between" }}>
-          {" "}
-          {/* Ensure elements are spaced out */}
-          <Box sx={{ display: "flex", alignItems: "center" }}>
-            <SportsBarIcon
-              sx={{ display: { xs: "flex", md: "flex" }, mr: 1 }}
-            />
+        <Toolbar disableGutters>
+          <Box sx={{ display: "flex", flexGrow: 1, alignItems: "center" }}>
+            <SportsBarIcon sx={{ display: "flex", mr: 1 }} />
             <Typography
               variant="h6"
               noWrap
               component="a"
               href="/"
               sx={{
-                mr: 2,
-                display: { xs: "flex", md: "flex" },
+                display: "flex",
                 fontFamily: "monospace",
                 fontWeight: 700,
                 letterSpacing: ".3rem",
                 color: "inherit",
                 textDecoration: "none",
-                fontSize: { xs: "0.875rem", sm: "1rem" }, // Adjust font size on small screens
+                fontSize: { xs: "0.875rem", sm: "1rem" },
               }}
             >
               CRAFT.BREWERY.FINDER
             </Typography>
+          </Box>
+          <Box sx={{ display: { xs: "none", md: "flex" }, flexGrow: 0 }}>
+            {pages.map((page) => (
+              <Button
+                key={page.name}
+                onClick={() => handleNavigate(page.path)}
+                sx={{ my: 2, color: "white", display: "block" }}
+              >
+                {page.name}
+              </Button>
+            ))}
           </Box>
           <IconButton
             size="large"
@@ -74,12 +78,33 @@ function ResponsiveAppBar() {
             aria-haspopup="true"
             onClick={handleOpenNavMenu}
             color="inherit"
-            sx={{ ml: "auto" }} // Push the icon button to the right
+            sx={{ display: { xs: "flex", md: "none" } }}
           >
             <MenuIcon />
           </IconButton>
         </Toolbar>
       </Container>
+      <Menu
+        id="menu-appbar"
+        anchorEl={anchorElNav}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "left",
+        }}
+        keepMounted
+        transformOrigin={{
+          vertical: "top",
+          horizontal: "left",
+        }}
+        open={Boolean(anchorElNav)}
+        onClose={handleCloseNavMenu}
+      >
+        {pages.map((page) => (
+          <MenuItem key={page.name} onClick={() => handleNavigate(page.path)}>
+            {page.name}
+          </MenuItem>
+        ))}
+      </Menu>
     </AppBar>
   );
 }
