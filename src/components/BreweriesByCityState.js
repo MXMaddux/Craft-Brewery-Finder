@@ -49,6 +49,17 @@ const BreweriesByCityState = () => {
     }
   };
 
+  const AddressWrapper = styled("div")(({ theme }) => ({
+    display: "flex",
+    flexDirection: "column",
+    fontWeight: theme.typography.fontWeightBold,
+    color: theme.palette.secondary.main,
+    "&:hover": {
+      color: theme.palette.primary.main, // Darker color on hover
+      cursor: "pointer",
+    },
+  }));
+
   const StyledButton = styled("button")(({ theme }) => ({
     backgroundColor: theme.palette.secondary.main,
     color: "#fff",
@@ -140,6 +151,7 @@ const BreweriesByCityState = () => {
             color: theme.palette.grey.main,
             fontSize: "2rem",
             fontWeight: theme.typography.fontWeightBold,
+            mx: "auto",
           }}
         >
           Find Breweries by City, State
@@ -229,23 +241,42 @@ const BreweriesByCityState = () => {
                   Name: <StyledSpan>{brewery.name}</StyledSpan>
                 </Typography>
                 <Typography variant="body1">
-                  Address:{" "}
-                  <StyledLink
-                    href={generateMapLink(brewery)}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                  Directions:{" "}
+                  <AddressWrapper
+                    onClick={() =>
+                      window.open(generateMapLink(brewery), "_blank")
+                    }
                   >
-                    {brewery.street}
-                  </StyledLink>
+                    <Typography
+                      variant="body1"
+                      sx={{
+                        textAlign: "center",
+                        fontWeight: theme.typography.fontWeightBold,
+                      }}
+                    >
+                      {brewery.street}
+                    </Typography>
+                    <Typography
+                      variant="body1"
+                      sx={{
+                        textAlign: "center",
+                        fontWeight: theme.typography.fontWeightBold,
+                      }}
+                    >
+                      {brewery.city}, {brewery.state}
+                    </Typography>
+                    <Typography
+                      variant="body1"
+                      sx={{
+                        textAlign: "center",
+                        fontWeight: theme.typography.fontWeightBold,
+                      }}
+                    >
+                      {brewery.postal_code}
+                    </Typography>
+                  </AddressWrapper>
                 </Typography>
-                <Typography variant="body1">
-                  <StyledSpan>
-                    {brewery.city}, {brewery.state}
-                  </StyledSpan>
-                </Typography>
-                <Typography variant="body1">
-                  <StyledSpan>{brewery.postal_code}</StyledSpan>
-                </Typography>
+
                 <Typography variant="body1">
                   Type: <StyledSpan>{brewery.brewery_type}</StyledSpan>
                 </Typography>

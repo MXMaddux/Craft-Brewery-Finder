@@ -27,6 +27,17 @@ const ByLocation = () => {
     setIsVisible(false);
   };
 
+  const AddressWrapper = styled("div")(({ theme }) => ({
+    display: "flex",
+    flexDirection: "column",
+    fontWeight: theme.typography.fontWeightBold,
+    color: theme.palette.secondary.main,
+    "&:hover": {
+      color: theme.palette.primary.main, // Darker color on hover
+      cursor: "pointer",
+    },
+  }));
+
   const StyledButton = styled("button")(({ theme }) => ({
     backgroundColor: theme.palette.secondary.main,
     color: "#fff",
@@ -149,14 +160,39 @@ const ByLocation = () => {
                   </Typography>
                   <Typography>
                     Directions To:{" "}
-                    <StyledLink
-                      href={generateMapLink(brewery)}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                    <AddressWrapper
+                      onClick={() =>
+                        window.open(generateMapLink(brewery), "_blank")
+                      }
                     >
-                      {brewery.street}, {brewery.city}, {brewery.state}{" "}
-                      {brewery.postal_code}
-                    </StyledLink>
+                      <Typography
+                        variant="body1"
+                        sx={{
+                          textAlign: "center",
+                          fontWeight: theme.typography.fontWeightBold,
+                        }}
+                      >
+                        {brewery.street}
+                      </Typography>
+                      <Typography
+                        variant="body1"
+                        sx={{
+                          textAlign: "center",
+                          fontWeight: theme.typography.fontWeightBold,
+                        }}
+                      >
+                        {brewery.city}, {brewery.state}
+                      </Typography>
+                      <Typography
+                        variant="body1"
+                        sx={{
+                          textAlign: "center",
+                          fontWeight: theme.typography.fontWeightBold,
+                        }}
+                      >
+                        {brewery.postal_code}
+                      </Typography>
+                    </AddressWrapper>
                   </Typography>
                   <Typography>
                     Type: <StyledSpan>{brewery.brewery_type}</StyledSpan>

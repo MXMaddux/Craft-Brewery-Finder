@@ -37,53 +37,53 @@ function ResponsiveAppBar() {
   };
 
   return (
-    <AppBar position="static">
-      <Container maxWidth="xl">
-        <Toolbar disableGutters>
-          <Box sx={{ display: "flex", flexGrow: 1, alignItems: "center" }}>
-            <SportsBarIcon sx={{ display: "flex", mr: 1 }} />
-            <Typography
-              variant="h6"
-              noWrap
-              component="a"
-              href="/"
-              sx={{
-                display: "flex",
-                fontFamily: "monospace",
-                fontWeight: 700,
-                letterSpacing: ".3rem",
-                color: "inherit",
-                textDecoration: "none",
-                fontSize: { xs: "0.875rem", sm: "1rem" },
-              }}
-            >
-              CRAFT.BREWERY.FINDER
-            </Typography>
-          </Box>
-          <Box sx={{ display: { xs: "none", md: "flex" }, flexGrow: 0 }}>
-            {pages.map((page) => (
-              <Button
-                key={page.name}
-                onClick={() => handleNavigate(page.path)}
-                sx={{ my: 2, color: "white", display: "block" }}
-              >
-                {page.name}
-              </Button>
-            ))}
-          </Box>
-          <IconButton
-            size="large"
-            aria-label="open drawer"
-            aria-controls="menu-appbar"
-            aria-haspopup="true"
-            onClick={handleOpenNavMenu}
-            color="inherit"
-            sx={{ display: { xs: "flex", md: "none" } }}
+    <AppBar position="static" sx={{ width: "100%", margin: 0 }}>
+      {/* <Container maxWidth="xl"> */}
+      <Toolbar disableGutters>
+        <Box sx={{ display: "flex", flexGrow: 1, alignItems: "center" }}>
+          <SportsBarIcon sx={{ display: "flex", mr: 1 }} />
+          <Typography
+            variant="h6"
+            noWrap
+            component="a"
+            href="/"
+            sx={{
+              display: "flex",
+              fontFamily: "monospace",
+              fontWeight: 700,
+              letterSpacing: ".3rem",
+              color: "inherit",
+              textDecoration: "none",
+              fontSize: { xs: "0.875rem", sm: "1rem" },
+            }}
           >
-            <MenuIcon />
-          </IconButton>
-        </Toolbar>
-      </Container>
+            CRAFT.BREWERY.FINDER
+          </Typography>
+        </Box>
+        <Box sx={{ display: { xs: "none", md: "flex" }, flexGrow: 0 }}>
+          {pages.map((page) => (
+            <Button
+              key={page.name}
+              onClick={() => handleNavigate(page.path)}
+              sx={{ my: 2, color: "white", display: "block" }}
+            >
+              {page.name}
+            </Button>
+          ))}
+        </Box>
+        <IconButton
+          size="large"
+          aria-label="open drawer"
+          aria-controls="menu-appbar"
+          aria-haspopup="true"
+          onClick={handleOpenNavMenu}
+          color="inherit"
+          sx={{ display: { xs: "flex", md: "none" } }}
+        >
+          <MenuIcon />
+        </IconButton>
+      </Toolbar>
+      {/* </Container> */}
       <Menu
         id="menu-appbar"
         anchorEl={anchorElNav}
