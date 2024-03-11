@@ -12,6 +12,8 @@ const UserProvider = ({ children }) => {
   const [locationCity, setLocationCity] = useState(null);
   const [breweries, setBreweries] = useState([]);
   const [areBreweries, setAreBreweries] = useState(false);
+  const [searchMessage, setSearchMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const states = [
     "Alabama",
@@ -97,20 +99,31 @@ const UserProvider = ({ children }) => {
   };
 
   const findByCityState = async (city, state) => {
+    setIsLoading(true);
     try {
       const response = await axios.get(
         `https://api.openbrewerydb.org/breweries?by_city=${encodeURIComponent(
           city
-        )}&by_state=${encodeURIComponent(state)}&per_page=300`
+        )}&by_state=${encodeURIComponent(state)}&per_page=50`
       );
-      setBreweries(response.data);
-      setAreBreweries(true);
+      if (response.data.length > 0) {
+        setBreweries(response.data);
+        setAreBreweries(true);
+        setSearchMessage(""); // Clear any previous message
+        setIsLoading(false);
+      } else {
+        setAreBreweries(false);
+        setSearchMessage("Sorry, No Craft Breweries Found In That Area"); // Set the message
+      }
     } catch (error) {
       console.error("Error finding breweries:", error);
+      setSearchMessage("Failed to fetch breweries."); // Handle error case
+      setIsLoading(false);
     }
   };
 
   const findBreweriesByCurrentCity = async () => {
+    setIsLoading(true);
     if (!navigator.geolocation) {
       console.error("Geolocation is not supported by this browser.");
       return;
@@ -134,8 +147,10 @@ const UserProvider = ({ children }) => {
             console.log(res.data);
             setBreweries(res.data);
             setAreBreweries(true); // Update breweries list based on city name;
+            setIsLoading(false);
           } catch (error) {
             console.error("Error finding breweries:", error);
+            setIsLoading(false);
           }
         } else {
           console.error("City not found.");
@@ -159,6 +174,12 @@ const UserProvider = ({ children }) => {
         areBreweries,
         setAreBreweries,
         states,
+        searchMessage,
+        isLoading,
+        setBreweries,
+        setSearchMessage,
+        setIsLoading,
+        setUserLocation,
       }}
     >
       {children}

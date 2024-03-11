@@ -9,36 +9,87 @@ import {
   Container,
   Select,
   MenuItem,
+  CircularProgress,
   styled,
 } from "@mui/material";
 import Box from "@mui/material/Box";
 import theme from "../theme";
+import { useNavigate } from "react-router-dom";
 
 import beerPicWithWoman from "../assets/img/woman-pulling-beer-out-of-box-of-beers.jpg";
 
 const BreweriesByCityState = () => {
+  const navigate = useNavigate("");
+
+  const GoHome = () => {
+    navigate("/");
+  };
+
   const {
     breweries,
     formatPhoneNumber,
     findByCityState,
     areBreweries,
-    setAreBreweries,
+    setIsLoading,
+    isLoading,
     states,
+    setBreweries,
+    setAreBreweries,
+    setSearchMessage,
   } = useGlobalContext();
   const [isVisible, setIsVisible] = useState(true);
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    const city = event.target.city.value;
-    const state = event.target.state.value;
-    findByCityState(city, state);
-    setIsVisible(false);
+    const city = event.target.city.value.trim();
+    const state = event.target.state.value.trim();
+    if (city && state) {
+      findByCityState(city, state);
+      setIsVisible(false);
+    }
   };
 
-  const StyledSpan = styled("span")(({ theme }) => ({
+  const StyledButton = styled("button")(({ theme }) => ({
+    backgroundColor: theme.palette.secondary.main,
+    color: "#fff",
+    fontWeight: theme.typography.fontWeightBold,
+    padding: "5px 10px",
+    borderColor: theme.palette.secondary.light,
+    "&:hover": {
+      backgroundColor: theme.palette.secondary.dark,
+      cursor: "pointer",
+    },
+    marginTop: "1rem",
+  }));
+
+  const StyledLink = styled("a")(({ theme }) => ({
+    textDecoration: "none",
+    fontWeight: theme.typography.fontWeightBold,
     color: theme.palette.secondary.main,
+    "&:hover": {
+      color: theme.palette.primary.main, // Darker color on hover
+      cursor: "pointer",
+    },
+  }));
+
+  const StyledSpan = styled("span")(({ theme }) => ({
+    color: theme.palette.primary.main,
     fontWeight: theme.typography.fontWeightBold,
   }));
+
+  // Function to generate a map link based on the brewery's address
+  const generateMapLink = (brewery) => {
+    const query = encodeURIComponent(
+      `${brewery.street}, ${brewery.city}, ${brewery.state}`
+    );
+    // Use Google Maps link by default
+    let mapLink = `https://www.google.com/maps/search/?api=1&query=${query}`;
+    // Check if the user is on an iOS device to use Apple Maps
+    if (/iPhone|iPad|iPod/.test(navigator.userAgent)) {
+      mapLink = `http://maps.apple.com/?address=${query}`;
+    }
+    return mapLink;
+  };
 
   const ExternalLink = styled("a")(({ theme }) => ({
     textDecoration: "none",
@@ -51,11 +102,26 @@ const BreweriesByCityState = () => {
   }));
 
   useEffect(() => {
-    setAreBreweries(false);
+    setBreweries([]); // Clear previous breweries
+    setAreBreweries(false); // Reset areBreweries flag
+    setSearchMessage(""); // Clear any search messages
+    setIsLoading(false); // Ensure loading state is reset
   }, []);
 
   return (
     <Container maxWidth="xl">
+      {isLoading && (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "100vh",
+          }}
+        >
+          <CircularProgress />
+        </Box>
+      )}
       <Box
         sx={{
           maxWidth: "800px",
@@ -78,54 +144,59 @@ const BreweriesByCityState = () => {
         >
           Find Breweries by City, State
         </Typography>
-        {!areBreweries && (
-          <img
-            src={beerPicWithWoman}
-            alt="woman pulling beer from box"
-            sx={{
-              width: { xs: "95%", sm: "85%", md: "80%" }, // Adjusted for responsiveness
-              maxWidth: "95%", // Prevents the image from being too wide on any screen
-              height: "auto", // Keeps aspect ratio
-              display: "block",
-              margin: "0 auto", // Centers the image
-            }}
-          />
-        )}
+        {!areBreweries && isVisible && (
+          <>
+            <img
+              src={beerPicWithWoman}
+              alt="woman pulling beer from box"
+              style={{
+                width: "95%",
+                maxWidth: "95%",
+                height: "auto",
+                display: "block",
+                margin: "0 auto",
+              }}
+            />
+            <form
+              onSubmit={handleSubmit}
+              style={{ display: "flex", flexDirection: "column", gap: "20px" }}
+            >
+              <FormControl>
+                <InputLabel htmlFor="city">City:</InputLabel>
+                <Input id="city" name="city" type="text" />
+              </FormControl>
+              <FormControl>
+                <InputLabel id="state-label" htmlFor="state">
+                  State:
+                </InputLabel>
+                <Select
+                  labelId="state-label"
+                  id="state"
+                  name="state"
+                  label="State"
+                  defaultValue=""
+                >
+                  {states.map((state) => (
+                    <MenuItem key={state} value={state}>
+                      {state}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
 
-        {isVisible && (
-          <form
-            onSubmit={handleSubmit}
-            style={{ display: "flex", flexDirection: "column", gap: "20px" }}
-          >
-            <FormControl>
-              <InputLabel htmlFor="city">City: </InputLabel>
-              <Input id="city" name="city" type="text" />
-            </FormControl>
-            <FormControl>
-              <InputLabel id="state-label" htmlFor="state">
-                State:{" "}
-              </InputLabel>
-              <Select
-                labelId="state-label"
-                id="state"
-                name="state"
-                label="State"
-                defaultValue=""
+              <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                disabled={isLoading}
               >
-                {states.map((state) => (
-                  <MenuItem key={state} value={state}>
-                    {state}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-
-            <Button type="submit" variant="contained" color="primary">
-              Search Breweries
-            </Button>
-          </form>
+                Search Breweries
+              </Button>
+            </form>
+          </>
         )}
       </Box>
+
       <Box
         height={"50%"}
         width={"100%"}
@@ -137,61 +208,77 @@ const BreweriesByCityState = () => {
         p={2}
       >
         {breweries &&
-          breweries.map((brewery) => {
-            return (
-              <React.Fragment key={brewery.id}>
-                <Box
-                  display={"flex"}
-                  flexDirection={"column"}
-                  alignItems={"center"}
-                  width={"100%"}
-                  mx={"auto"}
-                  sx={{ border: "1px solid grey", p: 1 }}
+          breweries.map((brewery) => (
+            <React.Fragment key={brewery.id}>
+              <Box
+                display={"flex"}
+                flexDirection={"column"}
+                alignItems={"center"}
+                width={"100%"}
+                mx={"auto"}
+                sx={{ border: "1px solid grey", p: 1 }}
+              >
+                <Typography
+                  variant="body1"
+                  sx={{
+                    color: theme.palette.grey.main,
+                    fontSize: "16px",
+                    fontWeight: theme.typography.fontWeightRegular,
+                  }}
                 >
-                  <Typography
-                    variant="body1"
-                    sx={{
-                      color: theme.palette.grey.main,
-                      fontSize: "16px",
-                      fontWeight: theme.typography.fontWeightRegular,
-                    }}
+                  Name: <StyledSpan>{brewery.name}</StyledSpan>
+                </Typography>
+                <Typography variant="body1">
+                  Address:{" "}
+                  <StyledLink
+                    href={generateMapLink(brewery)}
+                    target="_blank"
+                    rel="noopener noreferrer"
                   >
-                    Name: <StyledSpan>{brewery.name}</StyledSpan>
-                  </Typography>
-                  <Typography variant="body1">
-                    Address: <StyledSpan>{brewery.street}</StyledSpan>
-                  </Typography>
-                  <Typography variant="body1">
-                    <StyledSpan>
-                      {brewery.city}, {brewery.state}
-                    </StyledSpan>
-                  </Typography>
-                  <Typography variant="body1">
-                    <StyledSpan>{brewery.postal_code}</StyledSpan>
-                  </Typography>
-                  <Typography variant="body1">
-                    Type: <StyledSpan>{brewery.brewery_type}</StyledSpan>
-                  </Typography>
-                  <Typography variant="body1">
-                    Phone:{" "}
-                    <StyledSpan>
-                      {brewery.phone ? formatPhoneNumber(brewery.phone) : "N/A"}
-                    </StyledSpan>
-                  </Typography>
-                  <Typography variant="body1">
-                    URL:{" "}
-                    <ExternalLink
-                      href={brewery.website_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      {brewery.website_url}
-                    </ExternalLink>
-                  </Typography>
-                </Box>
-              </React.Fragment>
-            );
-          })}
+                    {brewery.street}
+                  </StyledLink>
+                </Typography>
+                <Typography variant="body1">
+                  <StyledSpan>
+                    {brewery.city}, {brewery.state}
+                  </StyledSpan>
+                </Typography>
+                <Typography variant="body1">
+                  <StyledSpan>{brewery.postal_code}</StyledSpan>
+                </Typography>
+                <Typography variant="body1">
+                  Type: <StyledSpan>{brewery.brewery_type}</StyledSpan>
+                </Typography>
+                <Typography variant="body1">
+                  Phone:{" "}
+                  <StyledSpan>
+                    {brewery.phone ? formatPhoneNumber(brewery.phone) : "N/A"}
+                  </StyledSpan>
+                </Typography>
+                <Typography variant="body1">
+                  URL:{" "}
+                  <ExternalLink
+                    href={brewery.website_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {brewery.website_url}
+                  </ExternalLink>
+                </Typography>
+              </Box>
+            </React.Fragment>
+          ))}
+        {!areBreweries && !isVisible && (
+          <>
+            <Typography
+              variant="h6"
+              sx={{ mt: 2, color: theme.palette.error.main }}
+            >
+              No Craft Breweries Found In That Area.
+            </Typography>
+            <StyledButton onClick={GoHome}>Home</StyledButton>
+          </>
+        )}
       </Box>
     </Container>
   );
