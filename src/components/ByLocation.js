@@ -61,7 +61,7 @@ const ByLocation = () => {
   }));
 
   const StyledSpan = styled("span")(({ theme }) => ({
-    color: theme.palette.primary.main,
+    color: theme.palette.secondary.main,
     fontWeight: theme.typography.fontWeightBold,
   }));
 
@@ -97,7 +97,15 @@ const ByLocation = () => {
   }, []);
 
   return (
-    <Container maxWidth="xl">
+    <Container
+      maxWidth="xl"
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
       {isLoading && (
         <Box
           sx={{
@@ -141,12 +149,16 @@ const ByLocation = () => {
             {breweries.map((brewery) => (
               <React.Fragment key={brewery.id}>
                 <Box
-                  display={"flex"}
-                  flexDirection={"column"}
-                  alignItems={"center"}
-                  width={"100%"}
-                  mx={"auto"}
-                  sx={{ border: "1px solid grey", p: 1 }}
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center", // Center content within each Box
+                    width: "100%", // Ensure Box doesn't exceed the container width
+                    maxWidth: "800px", // Adjust based on your layout needs
+                    mx: "auto", // Center Box in the Container
+                    p: 1,
+                    border: "1px solid grey",
+                  }}
                 >
                   <Typography
                     variant="body1"
