@@ -40,7 +40,13 @@ function ResponsiveAppBar() {
     <AppBar position="static" sx={{ width: "100%", margin: 0 }}>
       {/* <Container maxWidth="xl"> */}
       <Toolbar disableGutters>
-        <Box sx={{ display: "flex", flexGrow: 1, alignItems: "center" }}>
+        <Box
+          sx={{
+            display: "flex",
+            flexGrow: 1,
+            alignItems: "center",
+          }}
+        >
           <SportsBarIcon sx={{ display: "flex", mr: 1 }} />
           <Typography
             variant="h6"
