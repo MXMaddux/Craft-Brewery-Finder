@@ -6,7 +6,7 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { UserProvider } from "./store/user_context";
 import { ThemeProvider } from "@mui/material/styles";
-import BreweriesByCityStatePage from "./pages/BreweriesByCityStatePage";
+import ByCityStatePage from "./pages/ByCityStatePage";
 import ByLocationPage from "./pages/ByLocationPage";
 import theme from "./theme";
 import BeerStylesPage from "./pages/BeerStylesPage";
@@ -23,11 +23,7 @@ root.render(
           <App />
           <Routes>
             <Route exact path="/" element={<Home />} />
-            <Route
-              exact
-              path="/bycitystate"
-              element={<BreweriesByCityStatePage />}
-            />
+            <Route exact path="/bycitystate" element={<ByCityStatePage />} />
             <Route exact path="/bylocation" element={<ByLocationPage />} />
             <Route exact path="/beerstyles" element={<BeerStylesPage />} />
           </Routes>

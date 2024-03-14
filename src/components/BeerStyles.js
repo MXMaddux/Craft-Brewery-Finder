@@ -53,9 +53,18 @@ const BeerStyles = () => {
                     alignItems: "center", // Center content within each Box
                     width: "100%", // Ensure Box doesn't exceed the container width
                     maxWidth: "800px", // Adjust based on your layout needs
-                    mx: "auto", // Center Box in the Container
-                    p: 2,
+                    mx: "auto", // Center Box in the Container, automatically adjusts margins
+                    p: 1,
                     border: "1px solid grey",
+                    borderRight: "none",
+                    borderLeft: "none",
+                    // Use breakpoints for responsive adjustments
+                    margin: (theme) => ({
+                      xs: "0 auto", // For extra-small to small screens, auto margins for center alignment
+                      sm: "0 auto", // Adjust accordingly if you have specific styles for small screens
+                      md: "0 auto", // Center alignment for medium screens and up
+                      // You can add more breakpoints (lg, xl) if needed
+                    }),
                   }}
                 >
                   <Typography
